@@ -13,6 +13,8 @@ npm start
 
 This will build and run a development server with Webpack on `localhost:8080`, you should then be able to play blackjack against the dealer.  This setup is fairly robust and could easily be extended to support multiple players on each table! 
 
+![Gif of the game being played](https://i.gyazo.com/019f29361c46cc087f6077b82c838544.mp4)
+
 # Todos
 I never had a chance to implement the component tests for the React components, I focfused mainly on writing a test harness for the blackjack game script itself.  I would like to come back and write some React tests in the future!
 
@@ -24,3 +26,7 @@ This was built for a technical challenge for an interview - I created this proje
 # Known bugs
 Another known bug is that if you spam stick after busting the application will sometimes freeze, this would be something I could fix if I had more time but I didn't want to exceed the
 constraints outlined by the task brief.
+
+# Tests as of 9th June 2017
+
+![Image of test report](https://gyazo.com/8fba20b4219a58737b2ea4abc38e4c94?token=d47b2e9f6da60c1b985fc510d3c99834)
