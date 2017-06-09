@@ -16,7 +16,7 @@ This will build and run a development server with Webpack on `localhost:8080`, y
 ![Gif of the game being played](https://user-images.githubusercontent.com/3603112/26956362-f01b3f7a-4cb4-11e7-95a2-29e1e3e57fe4.gif)
 
 ## Todos
-I never had a chance to implement the component tests for the React components, I focfused mainly on writing a test harness for the blackjack game script itself.  I would like to come back and write some React tests in the future!
+I never had a chance to implement the component tests for the React components, I focused mainly on writing a test harness for the blackjack game script itself.  I would like to come back and write some React tests in the future!
 
 I'd also like to add SASS, I didn't have the time to add it to my build phase but using non-preprocessed CSS is just yuk!  Expect to see this changed.
 
