@@ -16,6 +16,8 @@ This will build and run a development server with Webpack on `localhost:8080`, y
 # Todos
 I never had a chance to implement the component tests for the React components, I focfused mainly on writing a test harness for the blackjack game script itself.  I would like to come back and write some React tests in the future!
 
+I'd also like to add SASS, I didn't have the time to add it to my build phase but using non-preprocessed CSS is just yuk!  Expect to see this changed.
+
 # Notes
 This was built for a technical challenge for an interview - I created this project in around 3 and a half hours so please expect there to be a few small bugs.  The unit tests compile and run 25/25 but they sometimes error on one or two (I believe I've done something goofy in mocha and the same instance of an object is being modified so please ignore those errors)
 
