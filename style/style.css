@@ -1,0 +1,92 @@
+body {
+    background: rgba(20, 30, 50, 1.0) !important;
+    color: white !important;
+    padding: 20px;
+}
+
+label {
+    font-size: 1.4em;
+    margin-right: 50px;
+}
+
+.text-color-green {
+    color: rgba(47, 174, 82, 1.0) !important;
+}
+
+.text-color-red {
+    color: rgba(255, 65, 53, 1.0) !important;
+}
+
+.text-color-orange {
+    color: rgba(233, 124, 41, 1.0) !important;
+}
+
+.table-section {
+    height: 300px;
+    margin-top: 30px;
+}
+
+.red {
+    color: red !important;
+}
+
+.card {
+    color: black !important;
+    width: 165px;
+    height: 220px;
+    display: inline-block !important;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.card:hover {
+    z-index: 1000;
+}
+
+.card .value {
+    font-size: 2.2em;
+    padding: 0;
+    text-transform: uppercase;
+}
+
+.card .suit {
+    font-size: 1.4em;
+    padding: 0;
+    margin-top: -5px;
+    text-transform: uppercase;
+}
+
+.card .small-text {
+    padding: 0;
+    margin-top: -5px;
+}
+
+.button {
+    padding: 10px 30px;
+    display: inline-block !important;
+}
+
+.button.red {
+    color: white !important;
+    background: rgba(255, 65, 53, 1.0) !important;
+}
+
+.button.green {
+    background: rgba(47, 174, 82, 1.0) !important;
+}
+
+.button.yellow {
+    background: rgba(233, 124, 41, 1.0) !important;
+}
+
+.button.default {
+    background: rgba(14, 121, 255, 1.0) !important;
+}
+
+#matchOutcome {
+    margin-left: 20px;
+}
