@@ -12,6 +12,7 @@ const Server = require('socket.io')
 const io = new Server(PORT)
 
 var tableAcceptingPlayers = true
+var gameStartTimer = null
 
 console.log("Server running on ", PORT)
 
@@ -66,9 +67,13 @@ function NewGame() {
 
     tableAcceptingPlayers = true 
 
-    setTimeout(() => {
+    if(gameStartTimer !== null) 
+        return 
+
+    gameStartTimer = setTimeout(() => {
         blackjack.NewGame()
         tableAcceptingPlayers = false
+        gameStartTimer = null
 
         if(players.length > 0) {
             players.forEach((player) => {
