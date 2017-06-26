@@ -5,12 +5,22 @@ const server = require('../index')
 
 const serverAddress = 'http://localhost:1337'
 
+import * as types from '../..//src/actions/types'
+
+
 describe("Socket Server", () => {
-    it("should create a socket listening on port 1337", () => {
-        var socket = client('http://localhost:1337')
-        socket.on('connect', () => {
-            console.log("Connected!")
+    it("should create a socket listening on port 1337 and receive a state event on connection", (done) => {
+        var socket = client(serverAddress)
+        socket.on('state', (nextState) => {
+            assert(nextState.game !== null) 
+            done()
         })
-        assert(1, 1)
     })
+    it("should assign a unique playerId for the connected socket", (done) => {
+        var socket = client(serverAddress)
+        socket.on('state', (nextState) => {
+            assert(nextState.playerId !== 0) 
+            done()
+        })
+    })  
 })

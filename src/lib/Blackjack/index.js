@@ -102,7 +102,7 @@ Blackjack.prototype.GetHighestHand = function() {
 
     this.players.forEach((player) => {
         let score = player.hand.GetScore()
-        if(score > scoreToBeat) {
+        if(score > scoreToBeat && scoreToBeat <= 21) {
             scoreToBeat = score
         }
     })
@@ -208,7 +208,16 @@ Blackjack.prototype.CheckForWinner = function()
 
     
     if(gameCompleted) {
-        console.log("Winners were: ", this.winners)
+        this.winners.forEach((winnerId) => {
+            let currPlayer = null
+            this.players.some((player) => {
+                if(player.id === winnerId) {
+                    currPlayer = player
+                }
+                return currPlayer !== null
+            })
+            if(currPlayer) currPlayer.wins++
+        }) 
         return this.callback()
     }
 }
@@ -217,7 +226,6 @@ Blackjack.prototype.RemovePlayerWinCondition = function(player) {
 
     if(this.winners.length > 0) {
         this.winners = this.winners.splice(this.winners.indexOf(player.id), 1)
-        console.log("Winners is now: ", this.winners)
     }
 
 }
@@ -227,8 +235,6 @@ Blackjack.prototype.AddPlayerWindCondition = function(player) {
     this.winners.some((winner) => {
         found = winner === player.id
     })
-
-    console.log("Found was: " + found + " setting win condition for: ", player.id)
 
     if(!found) {
         this.winners.push(player.id)

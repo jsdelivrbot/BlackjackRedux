@@ -22,11 +22,19 @@ class Table extends Component
 
     renderButtonPanel()
     {
-        const WINNER = this.props.game.get("winners") 
+        const winners = this.props.game.get("winners") 
         const currentPlayer = this.props.game.get('turn')
-        let player = this.getPlayer()
+        const player = this.getPlayer()
+        var didWin = false 
 
-        console.log("Winners are: ", WINNER)
+        console.log("CURRENT PLAYER IS: ", currentPlayer)
+
+        winners.some((winnerId) => {
+            if(winnerId === player.id) {
+                didWin = true
+            }
+            return didWin
+        })
 
         if(currentPlayer && currentPlayer.id === player.id)
         {
@@ -40,8 +48,17 @@ class Table extends Component
         } 
         else 
         {
-            if(currentPlayer === null) {
-                // check the win conditions
+            if(currentPlayer === null || currentPlayer.id == 0) {
+                var matchOutcome = <span id="matchOutcome">You lost to the house :(</span>
+                if(didWin) {
+                    matchOutcome = <span id="matchOutcome">You beat the house!</span>
+                } 
+                return (
+                    <div id="buttonPanel">
+                        <span>The next game will start in 10 seconds</span>
+                        { matchOutcome }
+                    </div>
+                )
             } else {
                 return (
                     <div id='buttonPanel'>
@@ -49,19 +66,6 @@ class Table extends Component
                     </div>
                 )
             }
-
-            let matchOutcome = ""
-            if(WINNER.length > 0) {
-                matchOutcome = <span id="matchOutcome">You beat the house!</span>
-            } else {
-                matchOutcome = <span id="matchOutcome">You lost to the house :(</span>
-            }
-            return (
-                <div id="buttonPanel">
-                    <Button action={this.props.newGame} title="New Game" />
-                    { matchOutcome }
-                </div>
-            )
         }
     }
 
