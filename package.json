@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": "git@github.com:alexmk92/ReduxBlackjack.git",
   "scripts": {
-    "start": "cross-env SOCKET_URL=1337 node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "test": "mocha --compilers js:babel-core/register --recursive ./src/lib --recursive",
     "test:watch": "npm run test -- --watch"
   },

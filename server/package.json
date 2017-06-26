@@ -5,8 +5,8 @@
   "main": "index.js",
   "repository": "git@github.com:alexmk92/ReduxBlackjack.git",
   "scripts": {
-    "start": "cross-env SOCKET_URL=1337 webpack && node bundle.js",
-    "test": "mocha --compilers js:babel-core/register --recursive ./ --recursive",
+    "start": "set SOCKET_URL = 1337 && webpack && node bundle.js",
+    "test": "mocha --compilers js:babel-core/register --recursive ./tests",
     "test:watch": "npm run test -- --watch"
   },
   "author": "Alexander Sims",
@@ -27,6 +27,7 @@
     "immutable": "^3.8.1",
     "lodash": "^4.16.1",
     "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3",
     "socket.io-redux": "^1.0.3"
   }
 }

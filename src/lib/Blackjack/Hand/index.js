@@ -15,6 +15,10 @@ Hand.prototype.NewHand = function()
     this.status = status.VALID
 }
 
+Hand.prototype.IsBlackjack = function() {
+    return this.cards.length === 2 && this.score === 21
+}
+
 Hand.prototype.GetScore = function()
 {
     return this.score
