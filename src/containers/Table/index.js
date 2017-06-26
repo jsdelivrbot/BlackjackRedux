@@ -7,6 +7,7 @@ import * as players from '../../lib/Blackjack/players'
 import Button from '../../components/Button'
 import Label from '../../components/Label'
 import Hand from '../../components/Hand'
+import PlayerWidget from '../../components/Player'
 
 class Table extends Component 
 {
@@ -89,7 +90,8 @@ class Table extends Component
         {
             console.log(this.props.game.get("players"))
             const DEALER_HAND = this.props.game.get("dealer").hand
-            const PLAYER_HAND = this.getPlayer().hand
+            const PLAYER = this.getPlayer()
+            const PLAYER_HAND = PLAYER.hand
 
             console.log("Players hand is: ", PLAYER_HAND)
             console.log("Dealers hand is: ", DEALER_HAND)
@@ -97,8 +99,7 @@ class Table extends Component
             return (
                 <div>
                     <header>
-                        <Label staticText="Player wins:" coloredText={this.props.game.get("playerWins")} />
-                        <Label staticText="Dealer wins:" coloredText={this.props.game.get("dealerWins")} />
+                        <Label staticText="Your wins:" coloredText={PLAYER.wins} />
                     </header>
 
                     <div id="dealerTable" className="table-section">
@@ -110,6 +111,8 @@ class Table extends Component
                     <div id="playerTable" className="table-section">
                         <Hand cards={PLAYER_HAND.cards} score={PLAYER_HAND.score} status={PLAYER_HAND.status} scoreToBeat={DEALER_HAND.score} label="Player" />
                     </div>
+
+                    <PlayerWidget players={this.props.game.get('players')} />
                 </div>
             )
         }

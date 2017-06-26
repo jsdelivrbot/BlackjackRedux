@@ -2,8 +2,11 @@ import Blackjack from '../src/lib/Blackjack'
 import { Map } from 'immutable'
 import * as types from '../src/actions/types'
 
+const MAX_PLAYERS = 5
+const MATCH_START_TIME = 10 * 1000
+
 const PORT = 1337
-const blackjack = new Blackjack(1, 1, 2, NewGame)
+const blackjack = new Blackjack(1, 1, 5, NewGame)
 
 const Server = require('socket.io')
 const io = new Server(PORT)
@@ -75,7 +78,7 @@ function NewGame() {
             NewGame()
         }
 
-    }, 3000)
+    }, MATCH_START_TIME)
 }
 
 function GetState(socket) {

@@ -2,6 +2,7 @@ body {
     background: rgba(20, 30, 50, 1.0) !important;
     color: white !important;
     padding: 20px;
+    position: relative;
 }
 
 label {
@@ -70,16 +71,16 @@ label {
     display: inline-block !important;
 }
 
-.button.red {
+#player-widget .red, .button.red {
     color: white !important;
     background: rgba(255, 65, 53, 1.0) !important;
 }
 
-.button.green {
+#player-widget .green, .button.green {
     background: rgba(47, 174, 82, 1.0) !important;
 }
 
-.button.yellow {
+#player-widget .orange, .button.yellow {
     background: rgba(233, 124, 41, 1.0) !important;
 }
 
@@ -87,6 +88,40 @@ label {
     background: rgba(14, 121, 255, 1.0) !important;
 }
 
+#player-widget .gray {
+    background: #777 !important;
+}
+
+#player-widget {
+    width: 300px;
+    position: absolute;
+    right: 0;
+    top: 200px;
+    border: 1px solid #ccc;
+}
+
 #matchOutcome {
     margin-left: 20px;
+}
+
+#player-widget span {
+    font-size: 0.9em;
+    padding: 5px;
+}
+
+#player-widget strong {
+    display: inline-block;
+    font-size: 2em;
+    width: 50px;
+    padding: 5px;
+    text-align: center;
+}
+
+#player-widget .stats {
+    display: inline-block;
+    width: 248px;
+}
+
+#player-widget .match-status {
+    padding: 7px 5px;
 }
