@@ -3,7 +3,7 @@ import { Map } from 'immutable'
 import * as types from '../src/actions/types'
 
 const MAX_PLAYERS = 5
-const MATCH_START_TIME = 10 * 1000
+const MATCH_START_TIME = 5 * 1000
 
 const PORT = 1337
 const blackjack = new Blackjack(1, 1, 5, NewGame)
@@ -96,5 +96,9 @@ function DestroySocket(socket) {
 
     if(players.length === 0) {
         NewGame()
+    } else {
+        players.forEach((player) => {
+            player.emit('state', GetState(player))
+        })
     }
 }

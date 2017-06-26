@@ -21,8 +21,12 @@ class PlayerWidget extends Component {
     }
 
     render() {
+        console.log("Player is: ", this.props.activePlayer)
+        var activeClass = this.props.activePlayer && this.props.activePlayer.id === this.props.id ? 'active' : ''
+
+        
         return (
-            <div>
+            <div className={activeClass}>
                 <strong>{ this.props.hand.score }</strong>
                 <div className='stats'>
                     <span>Player #{this.props.id}, Wins: {this.props.wins}</span>
@@ -43,7 +47,7 @@ class PlayerContainer extends Component {
 
         const nodes = this.props.players.map((player, i) => {
             return (
-                <PlayerWidget key={'widget ' + i} {...player} />
+                <PlayerWidget key={'widget ' + i} activePlayer={this.props.activePlayer} {...player} />
             )
         })
 

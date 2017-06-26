@@ -125,3 +125,15 @@ label {
 #player-widget .match-status {
     padding: 7px 5px;
 }
+
+.active {
+    -webkit-animation: pulsate 1s ease-out;
+    -webkit-animation-iteration-count: infinite; 
+    opacity: 0.0
+}
+
+@-webkit-keyframes pulsate {
+    0% {-webkit-transform: scale(1.0, 1.0); opacity: 1.0;}
+    50% {opacity: 0.75; -webkit-transform: scale(0.95, 0.95)}
+    100% {-webkit-transform: scale(1.0, 1.0); opacity: 1.0;}
+}

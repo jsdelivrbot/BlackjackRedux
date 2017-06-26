@@ -112,9 +112,11 @@ class Table extends Component
                         <Hand cards={PLAYER_HAND.cards} score={PLAYER_HAND.score} status={PLAYER_HAND.status} scoreToBeat={DEALER_HAND.score} label="Player" />
                     </div>
 
-                    <PlayerWidget players={this.props.game.get('players')} />
+                    <PlayerWidget activePlayer={this.props.game.get('turn')} players={this.props.game.get('players')} />
                 </div>
             )
+        } else {
+            return ( <p>The server is not running or the lobby is currently full, please try again later</p> )
         }
     }
 
