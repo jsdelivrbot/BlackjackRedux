@@ -10,7 +10,7 @@ import _ from 'lodash'
 // Also note that I have not implemented the concept of betting in this program
 // but that could easily be added to the rule set :)
 // For the sake of simplicity I have not used Immutable.js,
-function Blackjack(numberOfDecks = 1, timesToShuffle = 1, maxPlayers = 1)
+function Blackjack(numberOfDecks = 1, timesToShuffle = 1, maxPlayers = 1, callback)
 {
     this.deck = new Deck(numberOfDecks, timesToShuffle)
     this.numberOfDecks = numberOfDecks
@@ -19,8 +19,8 @@ function Blackjack(numberOfDecks = 1, timesToShuffle = 1, maxPlayers = 1)
     this.players = [],
     this.winners = [],
     this.dealer = { id: players.DEALER, hand: new Hand(), wins: 0 }
-    //this.player = new Hand()
     this.turn = null
+    this.callback = callback
 }
 
 // This is bad practice as it ends up being a public API function which means
@@ -31,10 +31,10 @@ function Blackjack(numberOfDecks = 1, timesToShuffle = 1, maxPlayers = 1)
 // in an IIFE block and have it as a private defintion
 Blackjack.prototype.NewGame = function()
 {
+    this.winners = []
     this.dealer.hand = new Hand()
     this.players.forEach((player) => {
         player.hand = new Hand()
-        player.beatHouse = false
     })
 
     this.turn = this.dealer
@@ -56,7 +56,8 @@ Blackjack.prototype.NewGame = function()
     this.turn = this.players[0]
 
     // Possibility of starting blackjack
-    return this.CheckForWinner()
+    this.CheckForWinner()
+    return this.GameState()
 }
 
 Blackjack.prototype.GameState = function() {
@@ -82,7 +83,6 @@ Blackjack.prototype.SpawnPlayer = function() {
             id: playerId, 
             wins: 0, 
             hand: new Hand(), 
-            beatHouse: false, 
             status: status.VALID 
         })
         
@@ -106,15 +106,54 @@ Blackjack.prototype.GetHighestHand = function() {
             scoreToBeat = score
         }
     })
+
+    return scoreToBeat
 }
 
 Blackjack.prototype.Stick = function()
 {
     this.turn.hand.status = status.STICK
 
+    this.CheckForDealersTurn()
+
+    return this.GameState()
+}
+
+Blackjack.prototype.Fold = function()
+{
+    this.turn.hand.status = status.FOLD;
+    
+    this.CheckForDealersTurn()
+
+    return this.GameState()
+}
+
+Blackjack.prototype.GetNextPlayer = function() {
+    let currentPlayer = this.turn 
+    let nextPlayer = null
+
+    this.players.some(function(player, i) {
+        if(player.id == currentPlayer.id) {
+            if(i+1 < this.players.length) {
+                nextPlayer = this.players[i+1]
+                return true 
+            }
+
+            return false
+        }
+    }.bind(this))
+
+    return nextPlayer
+}
+
+Blackjack.prototype.CheckForDealersTurn = function() {
+
+    if(this.turn.id === players.DEALER) 
+        return 
+
     let nextPlayer = this.GetNextPlayer()
 
-    if(!nextPlayer) {
+    if(nextPlayer === null) {
          this.turn = this.dealer
          
          var highestScore = this.GetHighestHand()
@@ -126,93 +165,59 @@ Blackjack.prototype.Stick = function()
         } 
 
         this.CheckForWinner()
-        
+
     } else {
         this.turn = nextPlayer
     }
-   
-    return this.GameState()
-}
-
-Blackjack.prototype.Fold = function()
-{
-    this.player.status = status.FOLD;
-    
-    let nextPlayer = this.GetNextPlayer()
-
-    if(!nextPlayer) {
-        this.CheckForWinner()
-    } else {
-        this.turn = nextPlayer
-    }
-
-    return this.GameState()
-}
-
-Blackjack.prototype.GetNextPlayer = function() {
-    let currentPlayer = this.turn 
-    let nextPlayer = null
-
-    this.players.some(function(player, i) {
-        if(player.id === currentPlayer.id) {
-            if(this.players.length < i) {
-                nextPlayer = this.players[i+1]
-                return true
-            }
-        }
-
-        return false
-    })
-
-    return nextPlayer
+ 
 }
 
 Blackjack.prototype.CheckForWinner = function()
 {
+    var gameCompleted = false
     const DEALER_SCORE = this.dealer.hand.GetScore()
 
     this.players.forEach((player) => {
         const PLAYER_SCORE = player.hand.GetScore()
 
-        if(this.turn !== players.DEALER && PLAYER_SCORE > 21) // went bust on player turn is instant loss
+        if(this.turn.id !== players.DEALER && PLAYER_SCORE > 21) // went bust on player turn is instant loss
         {
-            this.RemovePlayerWinCondition(player)
+            this.CheckForDealersTurn()
         }
         else if(player.hand.IsBlackjack()) // check player blackjack
         {
             this.AddPlayerWindCondition(player)
+            this.CheckForDealersTurn()
         }
-        else if(dealer.hand.IsBlackjack()) // check dealer blackjack
+        else if(this.dealer.hand.IsBlackjack()) // check dealer blackjack
         {
             this.RemovePlayerWinCondition(player)
         }
-        else if(PLAYER_SCORE > 0 && DEALER_SCORE > 0) // check when both people have played
-        {
-            if(this.turn.id === player.id)
-            {
-                if(player.status !== status.VALID || PLAYER_SCORE > 21)
-                    this.RemovePlayerWinCondition(player)
-            }
-            else if(this.turn.id === this.dealer.id)
-            {
-                if(this.dealer.status !== status.VALID || DEALER_SCORE > 21)
-                    this.RemovePlayerWinCondition(player)
-            }
-        }
         // When its the dealers turn, all draws have been made - make a final win condition check
-        if(this.turn === players.DEALER && PLAYER_SCORE > 0 && DEALER_SCORE > 0) 
+        if(this.turn.id === players.DEALER && PLAYER_SCORE > 0 && DEALER_SCORE > 0) 
         {
-            PLAYER_SCORE >= DEALER_SCORE
-                    ? this.AddPlayerWindCondition(player)
-                    : this.RemovePlayerWinCondition(player)
+            gameCompleted = true
+
+            if(PLAYER_SCORE <= 21 && (DEALER_SCORE <= 21 && PLAYER_SCORE >= DEALER_SCORE || DEALER_SCORE > 21 && PLAYER_SCORE <= 21) && (player.hand.status !== status.BUST && player.hand.status !== status.FOLD)) {
+                this.AddPlayerWindCondition(player)
+            } else {
+                this.RemovePlayerWinCondition(player)
+            }
         } 
     })
+
+    
+    if(gameCompleted) {
+        console.log("Winners were: ", this.winners)
+        return this.callback()
+    }
 }
 
 Blackjack.prototype.RemovePlayerWinCondition = function(player) {
 
     if(this.winners.length > 0) {
-        this.winners.splice(this.winners.indexOf(player.id), 1)
+        this.winners = this.winners.splice(this.winners.indexOf(player.id), 1)
+        console.log("Winners is now: ", this.winners)
     }
 
 }
@@ -220,8 +225,10 @@ Blackjack.prototype.RemovePlayerWinCondition = function(player) {
 Blackjack.prototype.AddPlayerWindCondition = function(player) {
     let found = false
     this.winners.some((winner) => {
-        found = winner.id === player.id
+        found = winner === player.id
     })
+
+    console.log("Found was: " + found + " setting win condition for: ", player.id)
 
     if(!found) {
         this.winners.push(player.id)
@@ -243,7 +250,7 @@ Blackjack.prototype.Hit = function()
     {
         return this.Stick()
     }
-    else 
+    else if(this.turn.id !== players.DEALER)
     {
         return this.CheckForWinner()
     }

@@ -1,20 +1,15 @@
 import Blackjack from '../lib/Blackjack'
 import * as actions from '../actions/types'
+import { Map } from 'immutable'
 
-const blackjack = new Blackjack()
-
-export default function(state = null, action)
+export default function(state = Map(), action)
 {
     switch(action.type)
     {
-        case actions.NEW_GAME :
-            return blackjack.NewGame()
-        case actions.HIT :
-            return blackjack.Hit(true)
-        case actions.STICK :
-            return blackjack.Stick()
-        case actions.FOLD:
-            return blackjack.Fold()
+        case actions.SET_STATE:
+            let map = Map(action.state)
+            console.log('game is: ', map.get("game"))
+            return state.merge(map)
         default :
             return state
     }

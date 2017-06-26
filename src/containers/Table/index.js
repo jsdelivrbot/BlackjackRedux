@@ -5,7 +5,6 @@ import * as actions from '../../actions'
 import * as types from '../../actions/types'
 import * as players from '../../lib/Blackjack/players'
 import Button from '../../components/Button'
-import Blackjack from '../../lib/Blackjack'
 import Label from '../../components/Label'
 import Hand from '../../components/Hand'
 
@@ -14,10 +13,6 @@ class Table extends Component
     constructor(props)
     {
         super(props)
-
-        this.state = {
-            game: null
-        }
     }
 
     shouldComponentUpdate(nextProps, nextState)
@@ -25,33 +20,15 @@ class Table extends Component
         return nextProps !== this.props
     }
 
-    componentWillMount()
-    {
-        if(!this.state.game)
-        {
-            this.setState({
-                game: new Blackjack(1, 1)
-            })
-        }
-
-        this.props.newGame()
-    }
-
-    componentWillUnmount()
-    {
-        if(this.state.game)
-        {
-            this.setState({
-                game: null
-            })
-        }
-    }
-
     renderButtonPanel()
     {
-        const WINNER = this.props.game.get("winner") 
+        const WINNER = this.props.game.get("winners") 
+        const currentPlayer = this.props.game.get('turn')
+        let player = this.getPlayer()
 
-        if(WINNER === null)
+        console.log("Winners are: ", WINNER)
+
+        if(currentPlayer && currentPlayer.id === player.id)
         {
             return (
                 <div id="buttonPanel">
@@ -63,8 +40,18 @@ class Table extends Component
         } 
         else 
         {
+            if(currentPlayer === null) {
+                // check the win conditions
+            } else {
+                return (
+                    <div id='buttonPanel'>
+                        It is currently player: { currentPlayer.id }'s turn.
+                    </div>
+                )
+            }
+
             let matchOutcome = ""
-            if(WINNER === players.PLAYER) {
+            if(WINNER.length > 0) {
                 matchOutcome = <span id="matchOutcome">You beat the house!</span>
             } else {
                 matchOutcome = <span id="matchOutcome">You lost to the house :(</span>
@@ -78,12 +65,30 @@ class Table extends Component
         }
     }
 
+    getPlayer() 
+    {
+        let playerId = this.props.game.get('playerId')
+        let player = null
+
+        this.props.game.get('players').some((compPlayer) => {
+            if(compPlayer.id === playerId) { player = compPlayer }
+
+            return player !== null
+        })
+
+        return player
+    }
+
     renderGameIfInProgress()
     {
-        if(this.props.game)
+        if(this.props.game && this.props.game.size > 0)
         {
-            const DEALER_HAND = this.props.game.get("dealer")
-            const PLAYER_HAND = this.props.game.get("player")
+            console.log(this.props.game.get("players"))
+            const DEALER_HAND = this.props.game.get("dealer").hand
+            const PLAYER_HAND = this.getPlayer().hand
+
+            console.log("Players hand is: ", PLAYER_HAND)
+            console.log("Dealers hand is: ", DEALER_HAND)
 
             return (
                 <div>
@@ -120,7 +125,7 @@ class Table extends Component
 function mapDispatchToProps(dispatch, props)
 {
     return {
-        newGame: () => dispatch({ type: types.NEW_GAME }),
+        //newGame: () => dispatch({ type: types.NEW_GAME }),
         hit: () => dispatch({ type: types.HIT }),
         stick: () => dispatch({ type: types.STICK }),
         fold: () => dispatch({ type: types.FOLD }),
