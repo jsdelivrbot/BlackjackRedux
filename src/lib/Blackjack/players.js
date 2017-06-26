@@ -1,2 +1,5 @@
-export const PLAYER = 0
-export const DEALER = 1
+export const DEALER = 0
+export const PLAYER = () => {
+    return Math.floor((Math.random() * 100) + 1)
+}
+

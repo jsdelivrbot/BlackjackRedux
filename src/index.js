@@ -6,10 +6,13 @@ import { createStore, applyMiddleware } from 'redux';
 import App from './components/app';
 import reducers from './reducers';
 
-const createStoreWithMiddleware = applyMiddleware()(createStore);
+
+const store = createStore(reducers, applyMiddleware(
+    socketIO(io.connect(1337))
+));
 
 ReactDOM.render(
-    <Provider store={createStoreWithMiddleware(reducers)}>
+    <Provider store={store}>
         <App />
     </Provider>
 , document.querySelector('.container'));
